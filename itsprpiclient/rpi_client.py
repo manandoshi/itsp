@@ -4,7 +4,7 @@ import socket
 from image_processing import *
 
 #init
-cal = 3
+cal = 17
 cam = 17
 
 sink = (0,0)
@@ -60,42 +60,46 @@ stepperY = stepper(25,23,18,15)
 elecMagnet = magnet(14) #fix
 
 def Move(x,y):
+    y = -y
     stepperX.setSteps(x)
     stepperY.setSteps(y)
     elecMagnet.move(x,y)
-    move_sequence = ((1,0,0,0),(0,0,1,0),(0,1,0,0),(0,0,0,1))
+    move_sequence = ((1,0,0,0),(0,0,0,1),(0,1,0,0),(0,0,1,0))
     try:
         signX, signY = (abs(stepperX.steps)/stepperX.steps), (abs(stepperY.steps)/stepperY.steps)
         stepperX.setSteps(signX*stepperX.steps)
         stepperY.setSteps(signY*stepperY.steps)
-        if (abs(x) == abs(y):
+        if (abs(x) == abs(y)):
             delay = 0.0055    
-            for i in range(x*4):
+            for i in range(abs(x)*4):
                 stepperX.setStepper(move_sequence[(i*signX)%4])
                 time.sleep(delay)
                 stepperX.setStepper((0,0,0,0))
                 stepperY.setStepper(move_sequencs[(i*signY)%4])
                 time.sleep(delay)
                 stepperY.setStepper((0,0,0,0))
-        else:
+        else
             Move(x,0)
-            Move(0,y)
+            Move(0,-y)
     except ZeroDivisionError:
-        stepper = stepperX if stepperX.steps != 0 else stepperY
+	if x==0 and y==0:
+	    return
+	stepper = stepperX if stepperX.steps != 0 else stepperY
         sign = abs(stepper.steps)/stepper.steps
         stepper.setSteps(sign*stepper.steps)
         counter = 0
-        delay = 0.0055
+        delay = 0.0055*2
         for i in range(stepper.steps*4):
             stepper.setStepper(move_sequence[(counter*sign)%4])         
             counter+=1
             time.sleep(delay)
+	stepper.setStepper((0,0,0,0))
 
 
 def xCord(c):
-    return 50 + 200*c/8 #X coordinate of c
+    return 66 + 34*c #X coordinate of c
 def yCord(r):
-    return 50 + 200*c/8 #y coord of r
+    return 20 + 34*c #y coord of r
 
 def playMove(move):
     theEasyList = ['R', 'B', 'Q', 'P']
@@ -103,8 +107,8 @@ def playMove(move):
     if board[fr][fc] != 0:
         Move(xCord(fc) - elecMagnet.x, yCord(fr) - elecMagnet.y)
         elecMagnet.on()
-        Move(0, stdVerticalConst)
-        Move(someEdgeCol.x - elecMagnet.x, 0)
+        Move(0, 17)
+        Move(xCord(-1) - elecMagnet.x, 0)
         Move(0, sink[1] - elecMagnet.y)
         Move(sink[0] - elecMagnet.x, 0)
         elecMagnet.off()
@@ -148,11 +152,17 @@ def playMove(move):
 def updateBoard(move):
     ir, ic, fr, fc = move[0], move[1], move[2], move[3]
     board[fr][fc] = board[fr][fc]
+    prev_presence[fr][fc] = prev_presence[ir][ic]
     board[ir][ic] = 0
+    prev_presence[ir][ic] = 0
     if board[ir][ic] == 'K' and abs(fc - ic) == 2:
         if fc==6:
+	    prev_presence[ir][5] = prev_presence[ir][7]
+	    prev_presence[ir][7] = 0
             board[ir][5], board[ir][7] = 'R', 0
         if fc==2:
+	    prev_presence[ir][3] = prev_presence[ir][0]
+	    prev_presence[ir][0] = 0
             board[ir][3], board[ir][0] = 'R' , 0
     
 
@@ -181,14 +191,14 @@ def receiveMove():
     move = []
     for pos in recvdMove:
         move.append(int(pos))
-    updateBoard(move)
+    updateBoard(move) 
     playMove(move)
     return move[4]
     
 
 server = socket.socket()
-host =
-port =
+host = "192.168.0.141"
+port = 5000
 server.connect((host, port))
 
 
@@ -232,5 +242,5 @@ while not end:
                 assert True
                 #Tell player he lost
 ##Go to 0,0
-##s.close
-#other losing stuff
+s.close()
+##other losing stuff
