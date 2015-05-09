@@ -16,9 +16,11 @@ def initSocket(port):
     s = socket.socket()
     s.bind(('0.0.0.0', port))
     s.listen(2)
-
+    print "Waiting for 2 connections :" 
     p1 , addr1 = s.accept()
+    print "Connected to p1(",addr1,")"
     p2, addr2 = s.accept()
+    print "Connected to p2(",addr2,")"
     p1.send('1')
     p2.send('2')
     return p1, p2
@@ -28,7 +30,7 @@ def main():
     end = False
     playerTurn = 0
     
-    p = initSocket(5000)
+    p = initSocket(5001)
     board = []
     board = initBoard()
     

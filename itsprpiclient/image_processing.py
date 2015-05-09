@@ -1,13 +1,15 @@
 import cv2
 import numpy as np
+import time
 from math import *
-
+import RPi.GPIO as GPIO
 ##number of squares in chessboard
 numberOfSquares = 8
 
+cap = cv2.VideoCapture(0)
 ##determines whose turn it is
 turn = 1
-
+cam = 17
 ##min value for canny-threshold
 min_value = 50
 ##max value for canny-threshold
@@ -29,15 +31,15 @@ prev_presence  = [[0 for a in range(numberOfSquares)]for a in range(numberOfSqua
 color_square = 10.0
 
 ##count for edge_detection
-edge_there = 70
+edge_there = 50
 
 
 ##side of square
 square_side = 0
 
 ##ratio of side of square to piece
-factor = 4
-factor_for_t1 = 0.6
+factor = 3
+factor_for_t1 = 0.75
 factor_for_t2 = 0.8
 
 #### determines threshold for checking color of piece 
@@ -75,23 +77,65 @@ def photoClick(pin):
     GPIO.setup(pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
     while True:
             if not GPIO.input(pin):
-                ret, frame = cap.read()
-                return ret, frame
+		for i in range(24):
+			ret, frame = cap.read()
+			time.sleep(1.0/24.0)
+		ret, frame = cap.read()
+		return ret, frame
             
+def flipH(arr):
+	ret = [[[0 for a in range(2)]for b in range(9)]for c in range(9)]
+	for i in range(9):
+		for j in range(9):
+			ret[i][j][0] = arr[i][8-j][0]
+			ret[i][j][1] = arr[i][8-j][1]
+	return ret
+
+def flipV(arr):
+	ret = [[[0 for a in range(2)]for b in range(9)]for c in range(9)]
+	for i in range(9):
+		for j in range(9):
+			ret[i][j][0] = arr[8-i][j][0]
+			ret[i][j][1] = arr[8-i][j][1]
+	return ret
+
+def flipD(arr):
+	ret = [[[0 for a in range(2)]for b in range(9)]for c in range(9)]
+	for i in range(9):
+		for j in range(9):
+			ret[i][j][0] = arr[j][i][0]
+			ret[i][j][1] = arr[j][i][1]
+	return ret
+
 ##function sets the initial conditions at the start of play
 def calibrate():
+    global cam
     ##blink false
     global threshold1
     global threshold2
     global color_square
-    ret , img = photoClick(pin_cam) 
-    patternsize = (numberOfSquares + 1, numberOfSquares + 1)
-    corn = cv2.findChessboardCorners( img, patternsize )
-##    cv2.drawChessboardCorners( img, (9,9), corn[1], corn[0])
-##    cv2.imwrite('board.jpg',img)
-    print corn[0]
-    print corn[1]
+    global square_side
+    global corners
+    print "Waiting for button"
+    while 1:
+	    i = 1
+	    ret , img = photoClick(cam)
+	    print "Button pushed"
+	    print img
+	    patternsize = (numberOfSquares + 1, numberOfSquares + 1)
+	    corn = cv2.findChessboardCorners( img, patternsize )
+	    cv2.drawChessboardCorners( img, (9,9), corn[1], corn[0])
+	    img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+	    print corn[0]
+	    print corn[1]
 
+	    if corn[0]:
+	    	    cv2.imwrite('cyay.jpg',img)
+		    print "YAY. Calib done"
+		    break
+	    else:
+		    print "Calib not done. Saving image"
+		    cv2.imwrite("cfail.jpg",img)
     if corn[0]:
         number = 0
         ##calibrating the corners array
@@ -102,11 +146,25 @@ def calibrate():
                 number = number + 1
                 print corners[i][j]
                 print number
-
+	
+	for i in range(4):
+		if corners[0][0][0] < 320 and corners[0][0][1]<240:
+			break
+		if i == 1:
+			corners = flipH(corners)
+		if i == 2:
+			corners = flipV(corners)
+		if i == 3:
+			corners = flipH(corners)
+	
+	if corners[0][8][0] > 320 and corners[0][8][1] < 240:
+		assert True
+	else:
+		corners = flipD(corners)
         x_difference = corners[4][4][0] - corners[4][5][0] 
         y_difference = corners[4][4][1] - corners[4][5][1]
         square_side = sqrt( x_difference*x_difference + y_difference*y_difference)
-        
+        print "Square side: " , square_side 
         ##calibrating the centres array        
         for i in range( 0 , numberOfSquares ):
             for j in range( 0 , numberOfSquares ):
@@ -121,8 +179,8 @@ def calibrate():
         ##setting up initial structure of pieces 
         for i in range( 0 , 2 ):
             for j in range( 0 , numberOfSquares ):
-                prev_presence[i][j] = 0
-                prev_presence[numberOfSquares - 1 - i][j] = 0
+                prev_presence[i][j] = 1
+                prev_presence[numberOfSquares - 1 - i][j] = -1
         ##blink True
 
         ##checking whether color of piece is black or white
@@ -154,10 +212,13 @@ def check_color( r , c , img ):
 def check_presence( image, boardPic):
     for row in range( 8 ):
         for column in range( 8 ):
+	    print "row:", row, "column:", column
             roi = image[(corners[row][column][1]+7):(corners[row+1][column+1][1]-7),(corners[row][column][0]+7):(corners[row+1][column+1][0]-7)]
-            count = cv2.countNonZero(roi)
-            if count > edge_there:
-                print row , column , count
+	    #print "ROI: ", roi
+	    count = cv2.countNonZero(roi) 
+	    print "Count value:", count
+	    
+	    if count > edge_there:
                 piece_presence[row][column] = check_color( row , column , boardPic) 
             else:
                 piece_presence[row][column] = 0
@@ -165,9 +226,13 @@ def check_presence( image, boardPic):
  
 ## comparing board positions before and after move is played and determining the move
 def find_move(boardPic):
+    boardPic = cv2.cvtColor(boardPic,cv2.COLOR_BGR2GRAY)
     board_canny = cv2.Canny ( boardPic , min_value , max_value )
-##    cv2.imwrite( "boardcanny.jpg", board_canny )
+    cv2.imwrite( "boardpic.jpg", boardPic)
+    cv2.imwrite( "canny.jpg", board_canny )
     check_presence( board_canny, boardPic)
+    print "piece pres:"
+    print piece_presence
     counter = 0
     fr = 0
     fc = 0
