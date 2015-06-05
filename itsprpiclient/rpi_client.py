@@ -133,18 +133,23 @@ def updateBoard(move):
     
 
 def sendMove():
+    end = 0
     sentValid = False
     while not sentValid:
         move = #ImgProc
         server.send(move)
         message = server.recv(1024)
-        if message = 'True':
+        if message == 'True':
             sentValid = True
-        elif message = 'False':
-            sentValid = False11
+        elif message == 'False':
+            sentValid = False
+        elif message == 'End':
+            sentValid = True
+            end = 1
         if not sentValid:
             #retraceMove()
     updateBoard(move)
+    return end
 
 def receiveMove():
     recvdMove = server.recv(1024)
@@ -152,8 +157,9 @@ def receiveMove():
     for pos in recvdMove:
         move.append(int(pos))
     updateBoard(move)
-    return move[4]
     playMove(move)
+    return move[4]
+    
 
 server = socket.socket()
 host =
@@ -177,10 +183,8 @@ elif playeridInt == 2:
 move = 
 if playeridStr == 'white':
     sendMove(sock)
-while 1:
+while not end:
     end = int(receiveMove(sock))
-    if end:
-        break
     sendMove(sock)
 
 
