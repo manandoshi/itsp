@@ -1,10 +1,25 @@
 import RPi.GPIO as GPIO
 import time
 import socket
+from image_processing import *
 
+#init
+cal =
+cam =
+##sink = ( )
 GPIO.setmode(GPIO.BCM)
+cap = cv2.VideoCapture(0)
 
-sink = ("""sink coords""")
+
+"""
+GPIO.setup(calFeedbackFalse, GPIO.OUT)
+GPIO.setup(calFeedbackTrue, GPIO.OUT)
+GPIO.setup(camFeedbackFalse, GPIO.OUT)
+
+GPIO.setup(GameEndWin, GPIO.OUT)
+GPIO.setup(GameEndLose, GPIO.OUT)
+GPIO.setup(GameEndDraw, GPIO.OUT)
+"""
 
 class stepper():
     def __init__(self, A1, A2, B1, B2):
@@ -132,12 +147,13 @@ def updateBoard(move):
             board[ir][3], board[ir][0] = 'R' , 0
     
 
-def sendMove():
+def sendMove(boardPic):
     end = 0
     sentValid = False
     while not sentValid:
-        move = #ImgProc
-        server.send(move)
+        move = find_move(boardPic)
+        moveString = str(move[0]) + str(move[1]) + str(move[2]) + str(move[3])
+        server.send(moveString)
         message = server.recv(1024)
         if message == 'True':
             sentValid = True
@@ -165,29 +181,47 @@ server = socket.socket()
 host =
 port =
 server.connect((host, port))
-board = [['R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R'],
-         ['P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'],
-         [0,0,0,0,0,0,0,0],
-         [0,0,0,0,0,0,0,0],
-         [0,0,0,0,0,0,0,0],
-         [0,0,0,0,0,0,0,0],
-         [0,0,0,0,0,0,0,0],
-         [0,0,0,0,0,0,0,0],
-         ['P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'],
-         ['R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R']]
-playeridInt = int(server.recv(1024))
-if playeridInt == 1:
-    playeridStr = 'white'
-elif playeridInt == 2:
-    playeridStr = 'black'
-move = 
-if playeridStr == 'white':
-    sendMove(sock)
+
+
+board = [['R','N','B','Q','K','B','N','R'],
+         ['P','P','P','P','P','P','P','P'],
+         [ 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 ],
+         [ 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 ],
+         [ 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 ],
+         [ 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 ],
+         [ 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 ],
+         [ 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 ],
+         ['P','P','P','P','P','P','P','P'],
+         ['R','N','B','Q','K','B','N','R']]
+
+##Calibrate :(
+calibrate()
+
+playerID = int(server.recv(1024)) - 1
+
+##Tell player his color
+##Set board
+
+pTurn = 0
+end = False
 while not end:
-    end = int(receiveMove(sock))
-    sendMove(sock)
-
-
-
-
-    
+    if pTurn == playerID:
+        ret, boardPic = photoClick(cam)
+        sendMove(boardPic)
+        pTurn = 1 - pTurn
+    else:
+        state = receiveMove()
+        if not state:
+            end = True
+            if state = playerID + 1:
+                #Tell player he won
+                assert True
+            if state = 3:
+                #Tell player he drew
+                assert True
+            else:
+                assert True
+                #Tell player he lost
+##Go to 0,0
+##s.close
+#other losing stuff
