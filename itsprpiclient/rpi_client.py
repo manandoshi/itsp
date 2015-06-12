@@ -1,10 +1,25 @@
 import RPi.GPIO as GPIO
 import time
 import socket
+from image_processing import *
 
+#init
+cal =
+cam =
+##sink = ( )
 GPIO.setmode(GPIO.BCM)
+cap = cv2.VideoCapture(0)
 
-sink = ("""sink coords""")
+
+"""
+GPIO.setup(calFeedbackFalse, GPIO.OUT)
+GPIO.setup(calFeedbackTrue, GPIO.OUT)
+GPIO.setup(camFeedbackFalse, GPIO.OUT)
+
+GPIO.setup(GameEndWin, GPIO.OUT)
+GPIO.setup(GameEndLose, GPIO.OUT)
+GPIO.setup(GameEndDraw, GPIO.OUT)
+"""
 
 class stepper():
     def __init__(self, A1, A2, B1, B2):
@@ -52,16 +67,18 @@ def Move(x,y):
         signX, signY = (abs(stepperX.steps)/stepperX.steps), (abs(stepperY.steps)/stepperY.steps)
         stepperX.setSteps(signX*stepperX.steps)
         stepperY.setSteps(signY*stepperY.steps)
-        counterX, counterY = 0, 0
-        delay = 0.0055/min(stepperX.steps, stepperY.steps)
-        for i in range(stepperX.steps*stepperY.steps*4):
-            if (i+1)%stepperX.steps == 0:
-                stepperY.setStepper(move_sequence[counterY%4*signY])
-                counterY+=1
-            if (i+1)%stepperY.steps == 0:
-                stepperX.setStepper(move_sequence[counterX%4*signX])
-                counterX+=1
-            time.sleep(delay)
+        if (abs(x) == abs(y):
+            delay = 0.0055    
+            for i in range(x*4):
+                stepperX.setStepper(move_sequence[(i*signX)%4])
+                time.sleep(delay)
+                stepperX.setStepper((0,0,0,0))
+                stepperY.setStepper(move_sequencs[(i*signY)%4])
+                time.sleep(delay)
+                stepperY.setStepper((0,0,0,0))
+        else:
+            Move(x,0)
+            Move(0,y)
     except ZeroDivisionError:
         stepper = stepperX if stepperX.steps != 0 else stepperY
         sign = abs(stepper.steps)/stepper.steps
@@ -69,7 +86,7 @@ def Move(x,y):
         counter = 0
         delay = 0.0055
         for i in range(stepper.steps*4):
-            stepper.setStepper(move_sequence[counter%4*sign])         
+            stepper.setStepper(move_sequence[(counter*sign)%4])         
             counter+=1
             time.sleep(delay)
 
@@ -132,12 +149,13 @@ def updateBoard(move):
             board[ir][3], board[ir][0] = 'R' , 0
     
 
-def sendMove():
+def sendMove(boardPic):
     end = 0
     sentValid = False
     while not sentValid:
-        move = #ImgProc
-        server.send(move)
+        move = find_move(boardPic)
+        moveString = str(move[0]) + str(move[1]) + str(move[2]) + str(move[3])
+        server.send(moveString)
         message = server.recv(1024)
         if message == 'True':
             sentValid = True
@@ -165,29 +183,47 @@ server = socket.socket()
 host =
 port =
 server.connect((host, port))
-board = [['R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R'],
-         ['P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'],
-         [0,0,0,0,0,0,0,0],
-         [0,0,0,0,0,0,0,0],
-         [0,0,0,0,0,0,0,0],
-         [0,0,0,0,0,0,0,0],
-         [0,0,0,0,0,0,0,0],
-         [0,0,0,0,0,0,0,0],
-         ['P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'],
-         ['R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R']]
-playeridInt = int(server.recv(1024))
-if playeridInt == 1:
-    playeridStr = 'white'
-elif playeridInt == 2:
-    playeridStr = 'black'
-move = 
-if playeridStr == 'white':
-    sendMove(sock)
+
+
+board = [['R','N','B','Q','K','B','N','R'],
+         ['P','P','P','P','P','P','P','P'],
+         [ 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 ],
+         [ 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 ],
+         [ 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 ],
+         [ 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 ],
+         [ 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 ],
+         [ 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 ],
+         ['P','P','P','P','P','P','P','P'],
+         ['R','N','B','Q','K','B','N','R']]
+
+##Calibrate :(
+calibrate()
+
+playerID = int(server.recv(1024)) - 1
+
+##Tell player his color
+##Set board
+
+pTurn = 0
+end = False
 while not end:
-    end = int(receiveMove(sock))
-    sendMove(sock)
-
-
-
-
-    
+    if pTurn == playerID:
+        ret, boardPic = photoClick(cam)
+        sendMove(boardPic)
+        pTurn = 1 - pTurn
+    else:
+        state = receiveMove()
+        if not state:
+            end = True
+            if state = playerID + 1:
+                #Tell player he won
+                assert True
+            if state = 3:
+                #Tell player he drew
+                assert True
+            else:
+                assert True
+                #Tell player he lost
+##Go to 0,0
+##s.close
+#other losing stuff
