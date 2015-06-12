@@ -67,16 +67,18 @@ def Move(x,y):
         signX, signY = (abs(stepperX.steps)/stepperX.steps), (abs(stepperY.steps)/stepperY.steps)
         stepperX.setSteps(signX*stepperX.steps)
         stepperY.setSteps(signY*stepperY.steps)
-        counterX, counterY = 0, 0
-        delay = 0.0055/min(stepperX.steps, stepperY.steps)
-        for i in range(stepperX.steps*stepperY.steps*4):
-            if (i+1)%stepperX.steps == 0:
-                stepperY.setStepper(move_sequence[counterY%4*signY])
-                counterY+=1
-            if (i+1)%stepperY.steps == 0:
-                stepperX.setStepper(move_sequence[counterX%4*signX])
-                counterX+=1
-            time.sleep(delay)
+        if (abs(x) == abs(y):
+            delay = 0.0055    
+            for i in range(x*4):
+                stepperX.setStepper(move_sequence[(i*signX)%4])
+                time.sleep(delay)
+                stepperX.setStepper((0,0,0,0))
+                stepperY.setStepper(move_sequencs[(i*signY)%4])
+                time.sleep(delay)
+                stepperY.setStepper((0,0,0,0))
+        else:
+            Move(x,0)
+            Move(0,y)
     except ZeroDivisionError:
         stepper = stepperX if stepperX.steps != 0 else stepperY
         sign = abs(stepper.steps)/stepper.steps
@@ -84,7 +86,7 @@ def Move(x,y):
         counter = 0
         delay = 0.0055
         for i in range(stepper.steps*4):
-            stepper.setStepper(move_sequence[counter%4*sign])         
+            stepper.setStepper(move_sequence[(counter*sign)%4])         
             counter+=1
             time.sleep(delay)
 
