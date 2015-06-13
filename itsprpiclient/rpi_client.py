@@ -43,15 +43,15 @@ class stepper():
         GPIO.output(self.B2, w4)
 
 class magnet():
-    def _init__(self, control):
+    def __init__(self, control):
         self.control = control
         GPIO.setup(self.control, GPIO.OUT)
         self.x, self.y = 0
-    def on():
+    def on(self):
         GPIO.output(self.control, 1)
-    def off():
+    def off(self):
         GPIO.output(self.control, 0)
-    def move(x,y):
+    def move(self,x,y):
         self.x += x
         self.y += y
 
