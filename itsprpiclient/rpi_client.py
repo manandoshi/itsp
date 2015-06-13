@@ -4,9 +4,10 @@ import socket
 from image_processing import *
 
 #init
-cal =
-cam =
-##sink = ( )
+cal = 3
+cam = 17
+
+sink = (0,0)
 GPIO.setmode(GPIO.BCM)
 cap = cv2.VideoCapture(0)
 
@@ -54,9 +55,9 @@ class magnet():
         self.x += x
         self.y += y
 
-stepperX = stepper("""Pins""")
-stepperY = stepper("""Pins""")
-elecMagnet = magnet("""Pin""")
+stepperX = stepper(12,16,20,21)
+stepperY = stepper(25,23,18,15)
+elecMagnet = magnet(14) #fix
 
 def Move(x,y):
     stepperX.setSteps(x)
@@ -90,22 +91,28 @@ def Move(x,y):
             counter+=1
             time.sleep(delay)
 
+
+def xCord(c):
+    return 50 + 200*c/8 #X coordinate of c
+def yCord(r):
+    return 50 + 200*c/8 #y coord of r
+
 def playMove(move):
     theEasyList = ['R', 'B', 'Q', 'P']
     ir, ic, fr, fc = move[0], move[1], move[2], move[3]
     if board[fr][fc] != 0:
-        Move(fc.x - elecMagnet.x, fr.y - elecMagnet.y)
+        Move(xCord(fc) - elecMagnet.x, yCord(fr) - elecMagnet.y)
         elecMagnet.on()
         Move(0, stdVerticalConst)
         Move(someEdgeCol.x - elecMagnet.x, 0)
-        Move(0, sink.y - elecMagnet.y)
-        Move(sink.x - elecMagnet.x, 0)
+        Move(0, sink[1] - elecMagnet.y)
+        Move(sink[0] - elecMagnet.x, 0)
         elecMagnet.off()
         
     if board[ir][ic] in theEasyList:
-        Move(ic.x - elecMagnet.x, ir.y - elecMagnet.y)
+        Move(xCord(ic) - elecMagnet.x, yCord(ir) - elecMagnet.y)
         elecMagnet.on()
-        Move(fc.x - elecMagnet.x, fr.y - elecMagnet.y)
+        Move(xCord(fc) - elecMagnet.x, yCord(fr) - elecMagnet.y)
         elecMagnet.off()
     elif board[ir][ic] == 'K':
         if abs(fc - ic) != 2:
@@ -127,15 +134,15 @@ def playMove(move):
             Move(0, -stdVerticalConst)
     else:
         assert board[ir][ic] == 'N'
-        Move(ic.x - elecMagnet.x, ir.y - elecMagnet.y)
+        Move(xCord(ic) - elecMagnet.x, yCord(ir) - elecMagnet.y)
         elecMagnet.on()
         if abs(fc-ic) == 1:
             Move(stdHorizontalConst*(fc-ic),0)
-            Move(0, fr.y - elecMagnet.y)
+            Move(0, yCord(fr)- elecMagnet.y)
             Move(stdHorizontalConst*(fc-ic),0)
         elif abs(fr-ir) == 1:
             Move(0, stdVerticalConst*(fr-ir))
-            Move(fc.x - elecMagnet.x, 0)
+            Move(xCord(fc) - elecMagnet.x, 0)
             Move(stdHorizontalConst*(fc-ic),0)
 
 def updateBoard(move):
