@@ -100,147 +100,147 @@ def Move(x,y):
 def xyCord(r,c):
 	if r == 0:
 		if c == 0:
-			return 280, 16
+			return 280, 30
 		if c == 1:
-			return 250, 16
+			return 247, 30
 		if c == 2:
-			return 220, 16
+			return 213, 33
 		if c == 3:
-			return 189, 16
+			return 181, 33
 		if c == 4:
-			return 158, 16
+			return 150, 33
 		if c == 5:
-			return 127, 16
+			return 122, 36
 		if c == 6:
-			return 95, 16
+			return 92, 36
 		if c == 7:
-			return 65, 16
+			return 60, 36
 
 	if r == 1:
 		if c == 0:
-			return 280, 47
+			return 281, 60
 		if c == 1:
-			return 250, 47
+			return 251, 63
 		if c == 2:
-			return 220, 47
+			return 220, 63
 		if c == 3:
-			return 189, 47
+			return 189, 63
 		if c == 4:
-			return 158, 47
+			return 157, 65
 		if c == 5:
-			return 127, 47
+			return 125, 65
 		if c == 6:
-			return 95, 47
+			return 92, 65
 		if c == 7:
-			return 64, 47
+			return 60, 68
 
 	if r == 2:
 		if c == 0:
-			return 280, 79
+			return 279, 92
 		if c == 1:
-			return 250, 79
+			return 248, 92
 		if c == 2:
-			return 219, 79
+			return 216, 92
 		if c == 3:
-			return 188, 79
+			return 185, 94
 		if c == 4:
-			return 157, 79
+			return 154, 94
 		if c == 5:
-			return 126, 79
+			return 122, 94
 		if c == 6:
-			return 95, 79
+			return 91, 94
 		if c == 7:
-			return 64, 79
+			return 60, 98
 
 	if r == 3:
 		if c == 0:
-			return 279, 110
+			return 278, 125
 		if c == 1:
-			return 249, 110
+			return 247, 127
 		if c == 2:
-			return 219, 110
+			return 216, 127
 		if c == 3:
-			return 188, 110
+			return 185, 127
 		if c == 4:
-			return 157, 110
+			return 154, 127
 		if c == 5:
-			return 126, 110
+			return 123, 127
 		if c == 6:
-			return 94, 110
+			return 92, 129
 		if c == 7:
-			return 63, 110
+			return 60, 129
 
 	if r == 4:
 		if c == 0:
-			return 279, 142
+			return 278, 157
 		if c == 1:
-			return 249, 142
+			return 245, 157
 		if c == 2:
-			return 218, 142
+			return 214, 157
 		if c == 3:
-			return 187, 142
+			return 183, 157
 		if c == 4:
-			return 156, 142
+			return 152, 159
 		if c == 5:
-			return 125, 141
+			return 121, 159
 		if c == 6:
-			return 93, 141
+			return 90, 160
 		if c == 7:
-			return 62, 141
+			return 59, 160
 
 	if r == 5:
 		if c == 0:
-			return 278, 173
+			return 277, 188
 		if c == 1:
-			return 248, 173
+			return 246, 188
 		if c == 2:
-			return 218, 173
+			return 215, 188
 		if c == 3:
-			return 187, 173
+			return 184, 190
 		if c == 4:
-			return 156, 173
+			return 153, 190
 		if c == 5:
-			return 124, 173
+			return 122, 192
 		if c == 6:
-			return 92, 172
+			return 90, 192
 		if c == 7:
-			return 61, 172
+			return 59, 192
 
 	if r == 6:
 		if c == 0:
-			return 278, 205
+			return 277, 220
 		if c == 1:
-			return 248, 205
+			return 245, 220
 		if c == 2:
-			return 217, 205
+			return 213, 220
 		if c == 3:
-			return 186, 205
+			return 181, 222
 		if c == 4:
-			return 155, 205
+			return 150, 222
 		if c == 5:
-			return 124, 204
+			return 119, 222
 		if c == 6:
-			return 92, 204
+			return 88, 224
 		if c == 7:
-			return 61, 204
+			return 57, 224
 
 	if r == 7:
 		if c == 0:
-			return 277, 236
+			return 276, 253
 		if c == 1:
-			return 247, 236
+			return 245, 253
 		if c == 2:
-			return 217, 236
+			return 214, 253
 		if c == 3:
-			return 186, 236
+			return 183, 255
 		if c == 4:
-			return 154, 236
+			return 152, 255
 		if c == 5:
-			return 123, 235
+			return 120, 255
 		if c == 6:
-			return 91, 235
+			return 88, 255
 		if c == 7:
-			return 60, 235
+			return 57, 255
 
 def playMove(move):
     
@@ -425,56 +425,13 @@ def receiveMove():
     updateBoard(move) 
     return move[4]
     
-
-server = socket.socket()
-host = "127.0.0.1"
-port = 5001
-server.connect((host, port))
-
-board = [['R','N','B','Q','K','B','N','R'],
-         ['P','P','P','P','P','P','P','P'],
-         [ 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 ],
-         [ 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 ],
-         [ 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 ],
-         [ 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 ],
-         ['P','P','P','P','P','P','P','P'],
-         ['R','N','B','Q','K','B','N','R']]
-
-##Calibrate :(
-print "About to calib"
-calibrate()
-
-playerID = int(server.recv(1024)) - 1
-
-##Tell player his color
-##Set board
-
-pTurn = 0
-end = False
-while not end:
-    if pTurn == playerID:
-        print "My Turn. Taking pic..."
-	ret, boardPic = photoClick(cam)
-	print "Ret:",ret
-        sendMove(boardPic)
-        pTurn = 1 - pTurn
+while True:
+    x = input("Ummm, x:")
+    y = input("y bhi de do:")
+    m = input("Magnet on rakhe?")
+    if m:
+	elecMagnet.on()
     else:
-	print "Not my turn."
-        state = receiveMove()
-	print "State:" , state
-        pTurn = 1-pTurn
-	if state:
-            end = True
-            if state == playerID + 1:
-                #Tell player he won
-                assert True
-            if state == 3:
-                #Tell player he drew
-                assert True
-            else:
-                assert True
-                #Tell player he lost
-##Go to 0,0
-s.close()
-##other losing stuff
-
+	elecMagnet.off()
+    Move(x,y)
+    
