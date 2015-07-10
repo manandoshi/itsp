@@ -421,6 +421,9 @@ def receiveMove():
     move = []
     for pos in recvdMove:
         move.append(int(pos))
+
+    move[0] = move[0]*((-1)**playerID)+(7*playerID)
+    move[2] = move[2]*((-1)**playerID)+(7*playerID)
     playMove(move)
     updateBoard(move) 
     return move[4]
@@ -445,6 +448,10 @@ print "About to calib"
 calibrate()
 
 playerID = int(server.recv(1024)) - 1
+
+if playerID == 1:
+    flipH(corners,9)
+    flipH(centres,8)
 
 ##Tell player his color
 ##Set board
