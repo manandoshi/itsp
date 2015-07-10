@@ -58,6 +58,7 @@ def inpt(board):
                         print " First click:" , m
                         c = 1
                         screen.blit(box, (14 + 50*m[1], 388 - 50*m[0]),(0,0,50,50))
+                        pygame.display.flip()
                         
                 elif c == 1:
                     if p[0] > 14 and p[0] < 414 and p[1] > 38 and p[1] < 438 :
@@ -69,4 +70,5 @@ def inpt(board):
                             outp(board)
                         else:
                             print "Debug m:" , m
+                            outp(board)
                             return str(m[0]) + str(m[1]) + str(m[2]) + str(m[3])

@@ -1,8 +1,8 @@
 import socket
 import graphics
 
-host = '127.0.0.1'
-port = 5000
+host = '192.168.0.112'
+port = 5001
 
 s = socket.socket()
 s.connect((host,port))
@@ -40,10 +40,20 @@ while not GameOver:
                 GameOver=True
 
         inp = int(inp)
-        board[(inp/10)%10][inp%10] = board[inp/1000][(inp/100)%10]
-        board[inp/1000][(inp/100)%10] = 0
-        graphics.outp(board)
+        ir = inp/1000
+        ic = (inp/100)%10
+        fr = (inp/10)%10
+        fc = inp%10
+        board[fr][fc] = board[ir][ic]
+        board[ir][ic] = 0
         
+        if board[fr][fc][1] == "K":
+            if abs(ic-fc)==2:
+                if fc==6:
+                    board[ir][5], board[ir][7] = board[ir][7], 0
+                if fc==2:
+                    board[ir][3], board[ir][0] = board[ir][0] , 0
+        graphics.outp(board)
         if GameOver:
             print "I WON"
             # I won
@@ -59,10 +69,25 @@ while not GameOver:
         end = inp[4]
         print "End prt : ", end
         inp = int(strInput)
+        
+        ir = inp/1000
+        ic = (inp/100)%10
+        fr = (inp/10)%10
+        fc = inp%10
 
-        board[(inp/10)%10][inp%10] = board[inp/1000][(inp/100)%10]
-        board[inp/1000][(inp/100)%10] = 0
+        board[fr][fc] = board[ir][ic]
+        board[ir][ic] = 0
+        if board[fr][fc][1] == "K":
+            if abs(ic-fc)==2:
+                if fc==6:
+                    board[ir][5], board[ir][7] = board[ir][7], 0
+                if fc==2:
+                    board[ir][3], board[ir][0] = board[ir][0] , 0
+        
+        if GameOver:
+            print "I WON"
         graphics.outp(board)
+        
         if end!="0":
             if end == "3":
                 assert True
