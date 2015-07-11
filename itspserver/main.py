@@ -2,16 +2,6 @@ from chess import *
 from inp import *
 import socket
 
-def initBoard():
-        board = [[ rook(0), knight(0), bishop(0), queen(0), king(0), bishop(0), knight(0), rook(0)],
-                [ pawn(0), pawn(0)  , pawn(0)  , pawn(0) , pawn(0), pawn(0)  , pawn(0)  , pawn(0)],
-                [ 0, 0, 0, 0, 0, 0, 0, 0],
-                [ 0, 0, 0, 0, 0, 0, 0, 0],
-                [ 0, 0, 0, 0, 0, 0, 0, 0],
-                [ 0, 0, 0, 0, 0, 0, 0, 0],
-                [ pawn(1), pawn(1)  , pawn(1)  , pawn(1) , pawn(1), pawn(1)  , pawn(1)  , pawn(1)],
-                [ rook(1), knight(1), bishop(1), queen(1), king(1), bishop(1), knight(1), rook(1)]]
-        return board
 def initSocket(port):
     s = socket.socket()
     s.bind(('0.0.0.0', port))

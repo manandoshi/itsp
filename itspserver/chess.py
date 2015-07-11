@@ -252,6 +252,17 @@ def inp():
 
     return [ir, ic, fr, fc]
 
+def initBoard():
+        board = [[ rook(0), knight(0), bishop(0), queen(0), king(0), bishop(0), knight(0), rook(0)],
+                [ pawn(0), pawn(0)  , pawn(0)  , pawn(0) , pawn(0), pawn(0)  , pawn(0)  , pawn(0)],
+                [ 0, 0, 0, 0, 0, 0, 0, 0],
+                [ 0, 0, 0, 0, 0, 0, 0, 0],
+                [ 0, 0, 0, 0, 0, 0, 0, 0],
+                [ 0, 0, 0, 0, 0, 0, 0, 0],
+                [ pawn(1), pawn(1)  , pawn(1)  , pawn(1) , pawn(1), pawn(1)  , pawn(1)  , pawn(1)],
+                [ rook(1), knight(1), bishop(1), queen(1), king(1), bishop(1), knight(1), rook(1)]]
+        return board
+
 def main():
     end = False
     c = 0
