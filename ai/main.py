@@ -2,20 +2,20 @@ from chess import *
 import socket
 import ai
 
-def receiveMove():
+def receiveMove(board):
     recvdMove = server.recv(1024)
     move = []
     for pos in recvdMove:
         move.append(int(pos))
-    updateBoard(move) 
+    updateBoard(move, board) 
     return move[4]
     
-def sendMove(move):
+def sendMove(move,board):
     end = 0
     moveString = str(move[0]) + str(move[1]) + str(move[2]) + str(move[3])
     server.send(moveString)
     message = server.recv(1024)
-    updateBoard(move)
+    updateBoard(move, board)
     return end
 
 server = socket.socket()
@@ -33,9 +33,9 @@ end = False
 while not end:
     if pTurn == playerID:
         move = ai.playMove(board, pTurn)
-        sendMove(move)
+        sendMove(move, board)
     else:
-        state = receiveMove()
+        state = receiveMove(board)
 	if state:
             end = True
            if state == playerID + 1:

@@ -328,7 +328,7 @@ def initBoard():
                 [ rook(1), knight(1), bishop(1), queen(1), king(1), bishop(1), knight(1), rook(1)]]
         return board
 
-def updateBoard(move):
+def updateBoard(move, board):
     ir, ic, fr, fc = move[0], move[1], move[2], move[3]
     board[fr][fc] = board[ir][ic]
     board[ir][ic] = 0

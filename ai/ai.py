@@ -1,10 +1,11 @@
 from chess import *
 from revert import *
+from evaluate import *
 def getVal(level, parentVal, typ, board):
-    if level == 5:
+    if level == 4:
         value = evaluate(board)
-
-    dVal = typ*-9000
+        return value, (0,0,0,0)
+    dVal = typ*-90000
     c = 0 if typ == 1 else 1
     for ir in range(8):
         for ic in range(8):
@@ -15,7 +16,7 @@ def getVal(level, parentVal, typ, board):
                     if not err:
                         if end:
                             revertMove(board, (ir,ic,fr,fc), cap)
-                            return typ*90000, (ir,ic,fr,fc)
+                            return typ*900000, (ir,ic,fr,fc)
                         val, cmove = getVal(level+1, dVal, typ*-1, board)
                         if val*typ > dVal*typ:
                             dVal = val
@@ -25,5 +26,7 @@ def getVal(level, parentVal, typ, board):
                             return dVal, (ir,ic,fr,fc)
     return dVal, move
 
-def playMove(board):
-
+def playMove(board, p):
+    typ = 1 if p = 0 else -1
+    val, move = getVal(0, p*-90000, typ ,board)
+    return move
