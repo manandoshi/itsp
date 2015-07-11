@@ -1,6 +1,7 @@
 from chess import *
 from revert import *
-from evaluate import *
+#from evaluate import *
+
 def getVal(level, parentVal, typ, board):
     if level == 4:
         value = evaluate(board)
@@ -27,6 +28,6 @@ def getVal(level, parentVal, typ, board):
     return dVal, move
 
 def playMove(board, p):
-    typ = 1 if p = 0 else -1
+    typ = 1 if p = 1 else -1
     val, move = getVal(0, p*-90000, typ ,board)
     return move
