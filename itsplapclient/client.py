@@ -1,7 +1,7 @@
 import socket
 import graphics
 
-host = '192.168.0.112'
+host = '127.0.0.1'
 port = input("Port:")
 
 s = socket.socket()

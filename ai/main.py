@@ -19,7 +19,7 @@ def sendMove(move,board):
     return end
 
 server = socket.socket()
-host = '192.168.0.112'
+host = '127.0.0.1'
 port = input("Port: ")
 
 server.connect((host,port))

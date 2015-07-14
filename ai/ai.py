@@ -30,5 +30,5 @@ def getVal(level, parentVal, typ, board):
 
 def playMove(board, p):
     typ = 1 if p == 1 else -1
-    val, move = getVal(0, p*90000, typ ,board)
+    val, move = getVal(0, p*-90000, typ ,board)
     return move
