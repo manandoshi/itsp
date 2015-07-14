@@ -1,10 +1,12 @@
-def revert(board , move , cap):
+def revertMove(board , move , cap):
     if cap != 0 :
-        board[move[0]][move[1]] = board[move[2][move[3]]
+        board[move[0]][move[1]] = board[move[2]][move[3]]
         board[move[2]][move[3]] = cap
 
-    elif:
-        if board[move[2][move[3]].name == "K" and abs(move[3] - move[1]) == 2:
+    else:
+        if board[move[2]][move[3]] == 0:
+            print "WUT? :", move
+        if board[move[2]][move[3]].name == "K" and abs(move[3] - move[1]) == 2:
             if move[2] == 0 and move[3] == 6:
                  board[0][4] = board[0][6]
                  board[0][6] = 0
@@ -26,8 +28,8 @@ def revert(board , move , cap):
                  board[7][1] = board[7][3]
                  board[7][3] = 0 
 
-    else:
-        board[move[0]][move[1]] = board[move[2][move[3]]
-        board[move[2]][move[3]] = 0
+        else:
+            board[move[0]][move[1]] = board[move[2]][move[3]]
+            board[move[2]][move[3]] = 0
 
     return

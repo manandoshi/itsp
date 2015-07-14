@@ -1,6 +1,6 @@
 def evaluate(board):
     whiteSum = 0
-    BlackSum = 0
+    blackSum = 0
     for row in range(8):
         for column in range(8):
             piece = board[row][column]

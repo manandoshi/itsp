@@ -19,8 +19,8 @@ def main():
 
     end = False
     playerTurn = 0
-    
-    p = initSocket(5001)
+    port = input("port:") 
+    p = initSocket(port)
     board = []
     board = initBoard()
     

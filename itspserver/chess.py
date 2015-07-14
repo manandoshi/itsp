@@ -182,8 +182,11 @@ class pawn:
                 return True
 
         if (fr-ir)*p == 1:
-            if fc==ic and board[fr][fc] == 0:
-                return True
+            if fc==ic: 
+                if board[fr][fc] == 0:
+                    return True
+                else:
+                    return False
             else:
                 if board[fr][fc] != 0:
                     if board[fr][fc].color == self.color:

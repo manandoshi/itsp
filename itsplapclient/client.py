@@ -2,7 +2,7 @@ import socket
 import graphics
 
 host = '192.168.0.112'
-port = 5001
+port = input("Port:")
 
 s = socket.socket()
 s.connect((host,port))

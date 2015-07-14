@@ -19,8 +19,8 @@ def sendMove(move,board):
     return end
 
 server = socket.socket()
-host = '127.0.0.1'
-port = 5001
+host = '192.168.0.112'
+port = input("Port: ")
 
 server.connect((host,port))
 
@@ -38,17 +38,11 @@ while not end:
         state = receiveMove(board)
 	if state:
             end = True
-           if state == playerID + 1:
-                #Tell player he won
-                assert True
-                return
+            if state == playerID + 1:
+                break
             if state == 3:
-                #Tell player he drew
-                assert True
-                return
+                break
             else:
-                assert True
-                return
-                #Tell player he lost
+                break
     pTurn = 1 - pTurn
 s.close()
