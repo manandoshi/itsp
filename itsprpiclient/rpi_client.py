@@ -1,3 +1,4 @@
+import sys
 import RPi.GPIO as GPIO
 import time
 import socket
@@ -404,7 +405,7 @@ def sendMove(boardPic):
         if message == 'True':
             sentValid = True
         elif message == 'False':
-            sentValid = True
+            sentValid = False
 	    ##^SET THIS TO FALSE^##
         elif message == 'End':
             sentValid = True
@@ -428,7 +429,7 @@ def receiveMove():
 
 server = socket.socket()
 host = "127.0.0.1"
-port = 5001
+port = int(sys.argv[1])
 server.connect((host, port))
 
 board = [['R','N','B','Q','K','B','N','R'],

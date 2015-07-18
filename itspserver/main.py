@@ -1,6 +1,7 @@
 from chess import *
 from inp import *
 import socket
+import sys
 
 def initSocket(port):
     s = socket.socket()
@@ -19,7 +20,7 @@ def main():
 
     end = False
     playerTurn = 0
-    port = input("port:") 
+    port = int(sys.argv[1]) 
     p = initSocket(port)
     board = []
     board = initBoard()

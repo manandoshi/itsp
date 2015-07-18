@@ -1,3 +1,4 @@
+import sys
 from chess import *
 import socket
 import ai
@@ -20,7 +21,7 @@ def sendMove(move,board):
 
 server = socket.socket()
 host = '127.0.0.1'
-port = input("Port: ")
+port = int(sys.argv[1])
 
 server.connect((host,port))
 
